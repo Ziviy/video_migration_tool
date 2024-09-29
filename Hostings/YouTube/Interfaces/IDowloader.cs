@@ -3,5 +3,5 @@ using VideoLibrary;
 
 public interface IDownloader
 {
-    void Download(string url, string path);
+        Task Download(string url);
 }
