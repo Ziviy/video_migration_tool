@@ -1,5 +1,7 @@
 using encouraging_bot;
+using encouraging_bot.Hostings.YouTube;
 using encouraging_bot.Hostings.YouTube.Services;
+using encouraging_bot.Services.Converter;
 using encouraging_bot.TelegramBot;
 using encouraging_bot.TelegramBot.Interfaces;
 using encouraging_bot.TelegramBot.Services;
@@ -27,7 +29,9 @@ builder.Services.AddScoped<IUpdateHandler, UpdateHandler>();
 builder.Services.AddScoped<IReceiverService, ReceiverService>();
 builder.Services.AddSingleton<VideoClient>();
 builder.Services.AddScoped<IDownloader, YouTubeDownloader>();
-
+builder.Services.AddTransient<IVideoProbeService, VideoProbeService>();
+builder.Services.AddTransient<IConverterService, ConverterService>();
+builder.Services.AddTransient<VideoObj>(x => new VideoObj("", "", "", "", null));
 
 builder.Services.AddHostedService<BackgroundBotService>();
 

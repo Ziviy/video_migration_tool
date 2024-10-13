@@ -25,29 +25,27 @@ public class UpdateHandler : IUpdateHandler
         if (update.Message is null)
             return;
         
-        Console.WriteLine($"Received {update.Type} '{update.Message.Text}' in {update.Message.Chat}");
+        _logger.LogInformation($"Received {update.Type} '{update.Message.Text}' in {update.Message.Chat.Id}");
         
-        // let's echo back received text in the chat
-        // await botClient.SendTextMessageAsync(update.Message.Chat, $"{update.Message.From} said: {update.Message.Text}");
-        await botClient.SendTextMessageAsync(update.Message.Chat, "The video is being downloaded. Please wait");
+        await botClient.SendTextMessageAsync(update.Message.Chat, "The video is being downloaded. Please wait", cancellationToken: cancellationToken);
         using var scope = _serviceProvider.CreateScope();
         var downloader = scope.ServiceProvider.GetRequiredService<IDownloader>();
-        Console.WriteLine("Scoped");
+
         try
         {
             await downloader.Download(update.Message.Text);
-            await botClient.SendTextMessageAsync(update.Message.Chat, "The video has been downloaded.");
+            await botClient.SendTextMessageAsync(update.Message.Chat, "The video has been downloaded.", cancellationToken: cancellationToken);
         }
         catch(Exception e)
         {
             _logger.LogInformation("Error occurred while downloading video\n" + e);
-            await botClient.SendTextMessageAsync(update.Message.Chat, "An error occurred while downloading video");
+            await botClient.SendTextMessageAsync(update.Message.Chat, "An error occurred while downloading video", cancellationToken: cancellationToken);
         }
        
     }
     
     public async Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
     {
-        Console.WriteLine(exception); // just dump the exception to the console
+        _logger.LogError(exception, exception.Message);
     }
 }
