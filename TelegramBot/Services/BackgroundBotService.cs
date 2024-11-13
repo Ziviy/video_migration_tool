@@ -1,6 +1,6 @@
-using encouraging_bot.TelegramBot.Interfaces;
+using video_migration_tool.TelegramBot.Interfaces;
 
-namespace encouraging_bot.TelegramBot.Services;
+namespace video_migration_tool.TelegramBot.Services;
 
 public class BackgroundBotService : BackgroundService
 {

@@ -1,8 +1,8 @@
-﻿using encouraging_bot.TelegramBot.Interfaces;
-using Telegram.Bot;
+﻿using Telegram.Bot;
 using Telegram.Bot.Polling;
+using video_migration_tool.TelegramBot.Interfaces;
 
-namespace encouraging_bot.TelegramBot.Services;
+namespace video_migration_tool.TelegramBot.Services;
 
 public class ReceiverService : IReceiverService
 {
