@@ -22,36 +22,48 @@ public class UpdateHandler : IUpdateHandler
         _serviceProvider = serviceProvider;
         _uploader = uploader;
     }
-    
-    public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+
+    public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update,
+        CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        
+
         if (update.Message is null)
             return;
-        
+
         _logger.LogInformation($"Received {update.Type} '{update.Message.Text}' in {update.Message.Chat.Id}");
-        
-        await botClient.SendTextMessageAsync(update.Message.Chat, "The video is being downloaded. Please wait", cancellationToken: cancellationToken);
+
+        await botClient.SendMessage(update.Message.Chat, "The video is being downloaded. Please wait",
+            cancellationToken: cancellationToken);
         using var scope = _serviceProvider.CreateScope();
         var downloader = scope.ServiceProvider.GetRequiredService<IDownload>();
 
         try
         {
             var integrationFileInfo = await downloader.Download(update.Message.Text);
-            await botClient.SendTextMessageAsync(update.Message.Chat, "The video has been downloaded.", cancellationToken: cancellationToken);
+            await botClient.SendMessage(update.Message.Chat, "The video has been downloaded.",
+                cancellationToken: cancellationToken);
             await _uploader.UploadAsync(integrationFileInfo);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             _logger.LogInformation("Error occurred while downloading video\n" + e);
-            await botClient.SendTextMessageAsync(update.Message.Chat, "An error occurred while downloading video", cancellationToken: cancellationToken);
+            await botClient.SendMessage(update.Message.Chat, "An error occurred while downloading video",
+                cancellationToken: cancellationToken);
         }
-        
+
     }
-    
-    public async Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
+
+    public async Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception,
+        CancellationToken cancellationToken)
     {
         _logger.LogError(exception, exception.Message);
     }
+
+    public async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception,HandleErrorSource source,
+        CancellationToken cancellationToken)
+    {
+        _logger.LogError(exception, exception.Message);
+    }
+
 }
