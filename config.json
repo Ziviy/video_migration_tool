@@ -1,0 +1,9 @@
+﻿{
+  "Telegram": {
+    "Token": "<Your token here>"
+  },
+  "VK": {
+    "Token": "<Your token here>",
+    "ApplicationId": "52611331"
+  }
+}

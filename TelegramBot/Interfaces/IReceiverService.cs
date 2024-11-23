@@ -1,4 +1,4 @@
-﻿namespace encouraging_bot.TelegramBot.Interfaces;
+﻿namespace video_migration_tool.TelegramBot.Interfaces;
 
 public interface IReceiverService
 {
